@@ -1,0 +1,81 @@
+#include <stdio.h>
+
+int main() {
+    int pages[50], frames[10], recent[10];
+    int n, f, i, j, k, pageFaults = 0;
+    int flag1, flag2, pos, min;
+
+    printf("Enter number of pages: ");
+    scanf("%d", &n);
+
+    printf("Enter page reference string:\n");
+    for (i = 0; i < n; i++)
+        scanf("%d", &pages[i]);
+
+    printf("Enter number of frames: ");
+    scanf("%d", &f);
+
+    for (i = 0; i < f; i++) {
+        frames[i] = -1;
+        recent[i] = 0;
+    }
+
+    printf("\nPage\tFrames\n");
+
+    for (i = 0; i < n; i++) {
+        flag1 = flag2 = 0;
+
+        // Check if page already present
+        for (j = 0; j < f; j++) {
+            if (frames[j] == pages[i]) {
+                recent[j] = i;
+                flag1 = flag2 = 1;
+                break;
+            }
+        }
+
+        // If empty frame exists
+        if (flag1 == 0) {
+            for (j = 0; j < f; j++) {
+                if (frames[j] == -1) {
+                    frames[j] = pages[i];
+                    recent[j] = i;
+                    pageFaults++;
+                    flag2 = 1;
+                    break;
+                }
+            }
+        }
+
+        // Replace LRU page
+        if (flag2 == 0) {
+            min = recent[0];
+            pos = 0;
+
+            for (j = 1; j < f; j++) {
+                if (recent[j] < min) {
+                    min = recent[j];
+                    pos = j;
+                }
+            }
+
+            frames[pos] = pages[i];
+            recent[pos] = i;
+            pageFaults++;
+        }
+
+        printf("%d\t", pages[i]);
+        for (j = 0; j < f; j++) {
+            if (frames[j] != -1)
+                printf("%d ", frames[j]);
+            else
+                printf("- ");
+        }
+        printf("\n");
+    }
+
+    printf("\nTotal Page Faults = %d\n", pageFaults);
+
+    return 0;
+}
+
