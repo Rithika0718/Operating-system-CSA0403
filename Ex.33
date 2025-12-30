@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+int main() {
+    int pages[20], frames[10], time[10], n, f, i, j, pos, count = 0;
+    printf("Enter pages: ");
+    scanf("%d", &n);
+    for (i = 0; i < n; i++) scanf("%d", &pages[i]);
+
+    printf("Enter frames: ");
+    scanf("%d", &f);
+    for (i = 0; i < f; i++) frames[i] = -1;
+
+    for (i = 0; i < n; i++) {
+        int found = 0;
+        for (j = 0; j < f; j++) {
+            if (frames[j] == pages[i]) {
+                time[j] = ++count;
+                found = 1;
+            }
+        }
+        if (!found) {
+            pos = 0;
+            for (j = 1; j < f; j++)
+                if (time[j] < time[pos]) pos = j;
+            frames[pos] = pages[i];
+            time[pos] = ++count;
+        }
+    }
+    return 0;
+}
